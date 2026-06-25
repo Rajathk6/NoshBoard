@@ -2,6 +2,7 @@
 
 import { Router } from "express";
 import prisma from "../prisma";
+import { io } from "../server";
 
 const router = Router();
 
@@ -81,6 +82,8 @@ router.patch("/dishes/:dishId", async (req, res) => {
         isPublished,
       },
     });
+
+    io.emit("dish-updated", updatedDish);
     res.json(updatedDish);
   } catch (error) {
     console.error(error);
