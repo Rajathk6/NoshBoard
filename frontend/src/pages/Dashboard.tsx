@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDishes, updateDishes } from "../api/api";
 import type { Dish } from "../types/dish";
 import DishCard from "../component/dishcard";
+import socket from "../socket/socket";
 
 const Dashboard = () => {
     const [dishes, setDishes] = useState<Dish[]>([]);
@@ -21,19 +22,29 @@ const Dashboard = () => {
 ) {
     try {
         await updateDishes(dishId, isPublished);
-
-        setDishes((prev) =>
-            prev.map((dish) =>
-                dish.dishId === dishId
-                    ? { ...dish, isPublished }
-                    : dish
-            )
-        );
-
     } catch (error) {
         console.error(error);
     }
 }
+    useEffect(() => {
+
+    socket.on("dish-updated", (updatedDish) => {
+
+        setDishes((prev) =>
+            prev.map((dish) =>
+                dish.dishId === updatedDish.dishId
+                    ? updatedDish
+                    : dish
+            )
+        );
+
+    });
+
+    return () => {
+        socket.off("dish-updated");
+    };
+
+}, []);
 
     useEffect(() => {
         fetchDishes();
