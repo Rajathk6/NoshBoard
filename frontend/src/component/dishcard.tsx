@@ -2,13 +2,14 @@ import type { Dish } from "../types/dish";
 
 interface DishCardProps {
     dish: Dish;
+    onToggle: (dishId: string, isPublished: boolean) => void;
 }
 
-const DishCard = ({ dish }: DishCardProps) => {
+const DishCard = ({ dish, onToggle }: DishCardProps) => {
     return (
         <div className="dish-card">
             <img
-                src={dish.imageUrl}
+                src={dish.imageURL}
                 alt={dish.dishName}
                 className="dish-image"
             />
@@ -25,8 +26,9 @@ const DishCard = ({ dish }: DishCardProps) => {
                     </strong>
                 </p>
 
-                <button>
-                    {dish.isPublished ? "Unpublish" : "Publish"}
+                <button
+                    onClick={() => onToggle(dish.dishId, !dish.isPublished)} >
+                    {dish.isPublished ? "Unpublish" : "Publish"} 
                 </button>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDishes } from "../api/api";
+import { getDishes, updateDishes } from "../api/api";
 import type { Dish } from "../types/dish";
 import DishCard from "../component/dishcard";
 
@@ -15,6 +15,26 @@ const Dashboard = () => {
         }
     }
 
+    async function handleToggle(
+    dishId: string,
+    isPublished: boolean
+) {
+    try {
+        await updateDishes(dishId, isPublished);
+
+        setDishes((prev) =>
+            prev.map((dish) =>
+                dish.dishId === dishId
+                    ? { ...dish, isPublished }
+                    : dish
+            )
+        );
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
     useEffect(() => {
         fetchDishes();
     }, []);
@@ -28,6 +48,7 @@ const Dashboard = () => {
                 <DishCard
                     key={dish.id}
                     dish={dish}
+                    onToggle={handleToggle}
                 />
             ))}
         </div>
