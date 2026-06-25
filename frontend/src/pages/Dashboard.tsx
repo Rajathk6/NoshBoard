@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDishes } from "../api/api";
 import type { Dish } from "../types/dish";
+import DishCard from "../component/dishcard";
 
 const Dashboard = () => {
     const [dishes, setDishes] = useState<Dish[]>([]);
@@ -19,16 +20,19 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Nosh Dashboard</h1>
+    <div className="dashboard">
+        <h1>Nosh Dashboard</h1>
 
+        <div className="dish-grid">
             {dishes.map((dish) => (
-                <div key={dish.id}>
-                    {dish.dishName}
-                </div>
+                <DishCard
+                    key={dish.id}
+                    dish={dish}
+                />
             ))}
         </div>
-    );
+    </div>
+);
 };
 
 export default Dashboard;
